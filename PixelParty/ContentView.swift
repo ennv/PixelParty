@@ -8,11 +8,13 @@ enum Games: String, CaseIterable {
     
     case draw = "draw"
     case memory = "memory"
+    case puzzle = "puzzle"
     
     init?(id : Int) {
         switch id {
         case 1: self = .draw
         case 2: self = .memory
+        case 3: self = .puzzle
         default: return nil
         }
     }
@@ -23,6 +25,7 @@ import SwiftUI
 struct ContentView: View {
     @State var newDrawGame: Bool = false
     @State var newMemoryGame: Bool = false
+    @State var newPuzzleGame: Bool = false
     @State var word: String?
     @State var memoryMatrix: [Int]?
     
@@ -49,6 +52,11 @@ struct ContentView: View {
                         .navigationBarTitle("Memory")
                         .navigationBarTitleDisplayMode(.inline),
                     isActive: self.$newMemoryGame, label: { })
+                NavigationLink(
+                    destination: Puzzle(pushed: self.$newPuzzleGame)
+                        .navigationBarTitle("Puzzle")
+                        .navigationBarTitleDisplayMode(.inline),
+                    isActive: self.$newPuzzleGame, label: { })
             }
         }
     }
@@ -60,6 +68,8 @@ struct ContentView: View {
             self.newDrawGame = true
         case .memory:
             self.newMemoryGame = true
+        case .puzzle:
+            self.newPuzzleGame = true
         }
     }
     
