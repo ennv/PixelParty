@@ -4,33 +4,63 @@
 //
 //  Created by Nils Veidis on 8/24/21.
 //
+enum Games: String, CaseIterable {
+    
+    case draw = "draw"
+    case memory = "memory"
+    
+    init?(id : Int) {
+        switch id {
+        case 1: self = .draw
+        case 2: self = .memory
+        default: return nil
+        }
+    }
+}
 
 import SwiftUI
 
 struct ContentView: View {
-    @State var pushed: Bool = false
+    @State var newDrawGame: Bool = false
+    @State var newMemoryGame: Bool = false
     @State var word: String?
+    @State var memoryMatrix: [Int]?
     
     var body: some View {
         NavigationView {
             VStack {
-                Button(action: { self.newGame() }, label: {
-                    Text("Start").font(.largeTitle).bold()
-                })
+                ForEach(Games.allCases, id: \.self) { game in
+                    Button(action: { self.newGame(game: game) }, label: {
+                        Text(game.rawValue).font(.largeTitle).bold()
+                    })
+                }
+
+                
+                
                 if let word = self.word {
                 NavigationLink(
-                    destination: Draw(pushed: self.$pushed, word: word)
-                        .navigationBarTitle("Pixelate")
+                    destination: Draw(pushed: self.$newDrawGame, word: word)
+                        .navigationBarTitle("Draw")
                         .navigationBarTitleDisplayMode(.inline),
-                    isActive: self.$pushed, label: { })
+                    isActive: self.$newDrawGame, label: { })
                 }
+                NavigationLink(
+                    destination: Memory(pushed: self.$newMemoryGame)
+                        .navigationBarTitle("Memory")
+                        .navigationBarTitleDisplayMode(.inline),
+                    isActive: self.$newMemoryGame, label: { })
             }
         }
     }
     
-    private func newGame() {
-        self.word = getWord()
-        self.pushed = true
+    private func newGame(game: Games) {
+        switch game {
+        case .draw:
+            self.word = getWord()
+            self.newDrawGame = true
+        case .memory:
+            self.newMemoryGame = true
+        }
     }
     
     private func getWord() -> String {

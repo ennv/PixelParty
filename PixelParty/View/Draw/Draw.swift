@@ -97,7 +97,7 @@ struct Draw: View {
                     if self.timeRemaining <= 0 {
                         self.secondPushed = true
                     }
-        }
+                }
 
     }
     
