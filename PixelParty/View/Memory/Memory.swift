@@ -32,7 +32,7 @@ struct Memory: View {
                 )
                 .padding()
             
-            Text("Points: \(self.score)").font(self.timerDone ? .largeTitle : .headline)
+            Text("Score: \(self.score)").font(self.timerDone ? .largeTitle : .headline)
         
             !self.timerDone ? self.matrix : nil
             
@@ -101,7 +101,15 @@ struct Matrix: View {
                     }.border(Color.gray, width: 1)
                 }
             }
-        }
+            Button(action: {
+                self.showCorrect = true
+                self.score -= 50
+                DispatchQueue.main.asyncAfter(deadline: .now() + 1) {
+                    self.showCorrect = false
+                }
+            }, label : { Text("Show Grid | -50 points") })
+            .padding()
+        }.padding()
         .onAppear(perform: {
             // FIRST LOAD
             self.loadNewMatrix()
